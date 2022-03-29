@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+    <table style="width:100%">
+        <tr>
+            <th>ID Number</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Issue Date</th>
+            <th>Options</th>
+        </tr>
+        {%for row in rows:%}
+        <tr>
+            <th>{{row[0]}}</th>
+            <th>{{row[1]}}</th>
+            <th>{{row[2]}}</th>
+            <th>{{row[3]}}</th>
+            <th>
+                <form action="{{url_for('rds_ops', id_num=row[0])}}" method="post">
+                    <input type="submit" value="delete" />
+                </form>
+            </th>
+        </tr>
+        {%endfor%}
+    </table>
+
+{% endblock %}

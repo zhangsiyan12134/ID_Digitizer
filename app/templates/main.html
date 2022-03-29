@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome to the ID Digitizer!</h2>
+  <div class="menu">
+    <a href="/management">
+      <button type="button">Management</button>
+    </a>
+    <! –– more button can be added here ––>
+  </div>
+  </br></br></br></br>
+  <p style="margin-left: 40%">Please upload a valid ID:</p>
+  </br>
+  {{ dropzone.create(action='/upload') }}
+  {{ dropzone.load_js() }}
+  <script>
+    Dropzone.options.myDropzone = {
+      maxFilesize: 3,
+      accept: function(file, done) {
+        console.log("uploaded");
+        done();
+      },
+      init: function() {
+        this.on("addedfile", function() {
+          if (this.files[1]!=null){
+            this.removeFile(this.files[0]);
+          }
+        });
+      }
+    };
+  </script>
+  </div>
+
+{% endblock %}
