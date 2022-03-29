@@ -5,9 +5,6 @@ import boto3
 
 id_digitizer = Flask(__name__)
 
-global stats
-global scaler_config
-global worker_list
 global DEBUG
 
 DEBUG = True

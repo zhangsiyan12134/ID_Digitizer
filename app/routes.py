@@ -1,47 +1,13 @@
-from app import id_digitizer,  DEBUG
+from app import id_digitizer, DEBUG
 from flask import render_template, request, flash, jsonify, redirect, url_for, json
 from app.db_access import get_user_info, put_user_info, delete_user_info
+from app.lambda_access import send_image_to_lambda
 import os
-import requests
-from requests_toolbelt.multipart.encoder import MultipartEncoder
+from datetime import datetime
 from werkzeug.utils import secure_filename
 
-
-def send_post_request(addr, data):
-    """
-    Helper function to send POSt request that doesn't require a
-    full hreaders
-    :param addr: srt: request receiver url
-    :param data: dict
-    :return:
-    """
-    try:
-        r = requests.post(addr, data=data)
-    except requests.exceptions.RequestException as e:
-        print("Warning: Exception happened when sending the request")
-        if DEBUG is True:
-            print(e)
-
-
-def send_post_request_with_body(addr, params):
-    """
-    Helper function to send POSt request that require a full
-    hreaders
-    :param addr: srt: request receiver url
-    :param params: dict
-    :return:
-    """
-    data = MultipartEncoder(fields=params)
-    headers = {
-        'Content-type': data.content_type
-    }
-    try:
-        r = requests.post(addr, data=data, headers=headers)
-    except requests.exceptions.RequestException as e:
-        print("Warning: Exception happened when sending the request")
-        if DEBUG is True:
-            print(e)
-
+global userdata
+userdata = list()
 
 @id_digitizer.route('/')
 def main_page():
@@ -59,11 +25,33 @@ def upload_page():
     :return:
     """
     if request.method == 'POST':
+        global userdata
         f = request.files.get('file')
-        f.save(os.path.join(id_digitizer.config['IMAGE_PATH'], f.filename))  # for debugging only
+        image_path = os.path.join(id_digitizer.config['IMAGE_PATH'], f.filename)
+        f.save(image_path)  # for debugging only
+        with open(image_path, "rb") as image:
+            userdata = send_image_to_lambda(image).split('\n')
         # TODO: upload image to S3 bucket here
         if DEBUG:
             print('Image Received!')
+    return redirect(url_for('get_result'))
+
+
+@id_digitizer.route('/receive', methods=['GET', 'POST'])
+def get_result():
+    """
+    listen to the result from Textract in Lambda function
+    :return:
+    """
+    global userdata
+    if not userdata:
+        flash('Text Recognition Failed!')
+    else:
+        flash('User ' + userdata[3] + ' ' + userdata[2] + ' added!')
+        put_user_info(userdata[4], userdata[3], userdata[2], datetime.strptime(userdata[8], '%d-%B-%Y'))
+        if DEBUG:
+            print('Response Received!')
+            print(userdata)
     return render_template('main.html')
 
 
