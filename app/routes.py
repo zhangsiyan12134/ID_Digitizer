@@ -6,6 +6,8 @@ import os
 from datetime import datetime
 from dateutil import parser
 from werkzeug.utils import secure_filename
+import base64
+from config import Config
 
 global userdata
 userdata = list()
@@ -28,11 +30,22 @@ def upload_page():
     if request.method == 'POST':
         global userdata
         f = request.files.get('file')
-        image_path = os.path.join(id_digitizer.config['IMAGE_PATH'], f.filename)
+        image_path = os.path.join(Config.IMAGE_PATH, f.filename)
         f.save(image_path)  # for debugging only
         with open(image_path, "rb") as image:
             userdata = send_image_to_lambda(image).split('\n')
-        # TODO: upload image to S3 bucket here
+
+        # !!MUST Reopen b/c doesn't read properly somehow if it's encoded first
+        with open(image_path, 'rb') as img:
+            img_64 = base64.b64encode(img.read()).decode('utf-8')
+            # print(img_64)
+            try:
+                s3.put_object(Bucket='1779test', Key=str(Config.s3_counter), Body=img_64)
+                Config.s3_counter += 1
+            except Exception as e:
+                print(e)
+
+
         if DEBUG:
             print('Image Received!')
     return redirect(url_for('get_result'))
