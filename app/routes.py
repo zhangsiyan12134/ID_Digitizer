@@ -4,6 +4,7 @@ from app.db_access import get_user_info, put_user_info, delete_user_info
 from app.lambda_access import send_image_to_lambda
 import os
 from datetime import datetime
+from dateutil import parser
 from werkzeug.utils import secure_filename
 
 global userdata
@@ -48,7 +49,8 @@ def get_result():
         flash('Text Recognition Failed!')
     else:
         flash('User ' + userdata[3] + ' ' + userdata[2] + ' added!')
-        put_user_info(userdata[4], userdata[3], userdata[2], datetime.strptime(userdata[8], '%d-%B-%Y'))
+        datetime_obj = parser.parse(userdata[8])
+        put_user_info(userdata[4], userdata[3], userdata[2], datetime_obj)
         if DEBUG:
             print('Response Received!')
             print(userdata)

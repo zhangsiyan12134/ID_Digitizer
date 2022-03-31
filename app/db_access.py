@@ -34,6 +34,7 @@ def get_user_info():
     rows = cursor.fetchall()  # Retrieve all rows that contains the count
     return rows
 
+
 def put_user_info(id_num, first_name, last_name, issue_date):
     """
     add the new user info into RDS, if ID duplicates, then update that entry
