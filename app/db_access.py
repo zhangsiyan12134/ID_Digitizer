@@ -75,10 +75,10 @@ def put_user_info(id_num, first_name, last_name, issue_date):
     """
     response = table.put_item(
         Item={
-            'Key': id_num,
+            'Key': str(id_num),
             'FirstName': first_name,
             'LastName': last_name,
-            'IssueDate': issue_date,
+            'IssueDate': str(issue_date),
         }
     )
     return response

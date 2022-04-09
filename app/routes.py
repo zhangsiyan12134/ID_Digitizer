@@ -103,5 +103,5 @@ def db_add():
     last_name = request.form.get('last_name')
     issue_date = request.form.get('issue_date')
     datetime_obj = parser.parse(issue_date)
-    put_user_info(id_num, first_name, last_name, str(datetime_obj.date()))
+    put_user_info(id_num, first_name, last_name, datetime_obj.date())
     return redirect(url_for('management_page'))
