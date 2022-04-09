@@ -40,7 +40,7 @@ def get_user_info():
     retrieve all available user info from DynamoDB
     :return:
     """
-    response = response = table.scan()
+    response = table.scan()
     return response['Items']
 
 
