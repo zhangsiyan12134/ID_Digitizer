@@ -45,7 +45,6 @@ def upload_page():
             except Exception as e:
                 print(e)
 
-
         if DEBUG:
             print('Image Received!')
     return redirect(url_for('get_result'))
@@ -63,7 +62,7 @@ def get_result():
     else:
         flash('User ' + userdata[3] + ' ' + userdata[2] + ' added!')
         datetime_obj = parser.parse(userdata[8])
-        put_user_info(userdata[4], userdata[3], userdata[2], datetime_obj)
+        put_user_info(userdata[4], userdata[3], userdata[2], datetime_obj.date())
         if DEBUG:
             print('Response Received!')
             print(userdata)
@@ -80,8 +79,8 @@ def management_page():
     return render_template('management.html', rows=rows)
 
 
-@id_digitizer.route('/rds_ops/<id_num>', methods=['GET', 'POST'])
-def rds_ops(id_num):
+@id_digitizer.route('/db_del/<id_num>', methods=['GET', 'POST'])
+def db_del(id_num):
     """
     remove a user by id_num from database
     :param id_num:
@@ -90,3 +89,19 @@ def rds_ops(id_num):
     delete_user_info(id_num)
     rows = get_user_info()
     return render_template('management.html', rows=rows)
+
+
+@id_digitizer.route('/db_add/', methods=['GET', 'POST'])
+def db_add():
+    """
+    add a user manually to database
+    :param id_num:
+    :return:
+    """
+    id_num = request.form.get('id_num')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    issue_date = request.form.get('issue_date')
+    datetime_obj = parser.parse(issue_date)
+    put_user_info(id_num, first_name, last_name, str(datetime_obj.date()))
+    return redirect(url_for('management_page'))

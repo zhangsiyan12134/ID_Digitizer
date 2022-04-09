@@ -9,12 +9,13 @@ global DEBUG
 
 DEBUG = True
 
-cloudwatch_client = boto3.client(
-        'cloudwatch',
+dynamodb_client = boto3.resource(
+        'dynamodb',
         region_name=Config.ASW_CONFIG['REGION'],
         aws_access_key_id=Config.ASW_CONFIG['AWS_ACCESS_KEY_ID'],
         aws_secret_access_key=Config.ASW_CONFIG['SECRET_ACCESS_KEY']
     )
+table = dynamodb_client.Table('ece1779')
 
 ec2_client = boto3.client(
         'ec2',

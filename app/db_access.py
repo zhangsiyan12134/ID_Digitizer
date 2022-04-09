@@ -1,10 +1,10 @@
 from flask import g
-from app import id_digitizer, DEBUG
+from app import id_digitizer, DEBUG, table
 import mysql.connector
 from mysql.connector import errorcode
 
 
-def connect_to_database():
+"""def connect_to_database():
     try:
         return mysql.connector.connect(
             host=id_digitizer.config['RDS_CONFIG']['host'],
@@ -19,10 +19,10 @@ def connect_to_database():
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
             print("Database does not exist")
         else:
-            print(err)
+            print(err)"""
 
 
-def get_user_info():
+'''def get_user_info():
     """
     retrieve all available user info from RDS
     :return:
@@ -32,10 +32,19 @@ def get_user_info():
     query = "SELECT * FROM ECE1779.user_list;"
     cursor.execute(query)
     rows = cursor.fetchall()  # Retrieve all rows that contains the count
-    return rows
+    return rows'''
 
 
-def put_user_info(id_num, first_name, last_name, issue_date):
+def get_user_info():
+    """
+    retrieve all available user info from DynamoDB
+    :return:
+    """
+    response = response = table.scan()
+    return response['Items']
+
+
+'''def put_user_info(id_num, first_name, last_name, issue_date):
     """
     add the new user info into RDS, if ID duplicates, then update that entry
     :return:
@@ -56,10 +65,26 @@ def put_user_info(id_num, first_name, last_name, issue_date):
         cursor.execute(query, (first_name, last_name, issue_date, id_num))
         cnx.commit()
         if DEBUG:
-            print('User found in DB! Updating the profile')
+            print('User found in DB! Updating the profile')'''
 
 
-def delete_user_info(id_num):
+def put_user_info(id_num, first_name, last_name, issue_date):
+    """
+    add the new user info into RDS, if ID duplicates, then update that entry
+    :return:
+    """
+    response = table.put_item(
+        Item={
+            'Key': id_num,
+            'FirstName': first_name,
+            'LastName': last_name,
+            'IssueDate': issue_date,
+        }
+    )
+    return response
+
+
+'''def delete_user_info(id_num):
     """
     delete the given user by id_num
     :return:
@@ -77,5 +102,17 @@ def delete_user_info(id_num):
         cursor.execute(query, (id_num, ))
         cnx.commit()
         if DEBUG:
-            print('User found! Deleted from DB')
+            print('User found! Deleted from DB')'''
 
+
+def delete_user_info(id_num):
+    """
+    delete the given user by id_num
+    :return:
+    """
+    response = table.delete_item(
+        Key={
+            'Key': id_num
+        }
+    )
+    return response
