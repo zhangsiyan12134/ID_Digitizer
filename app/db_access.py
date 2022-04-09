@@ -40,7 +40,7 @@ def get_user_info():
     retrieve all available user info from DynamoDB
     :return:
     """
-    response = response = table.scan()
+    response = table.scan()
     return response['Items']
 
 
@@ -70,7 +70,7 @@ def get_user_info():
 
 def put_user_info(id_num, first_name, last_name, issue_date):
     """
-    add the new user info into RDS, if ID duplicates, then update that entry
+    add the new user info into DynamoDB, if ID duplicates, then update that entry
     :return:
     """
     response = table.put_item(
