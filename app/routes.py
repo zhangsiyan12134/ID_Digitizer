@@ -30,23 +30,28 @@ def upload_page():
     if request.method == 'POST':
         global userdata
         f = request.files.get('file')
-        image_path = os.path.join(Config.IMAGE_PATH, f.filename)
-        f.save(image_path)  # for debugging only
-        with open(image_path, "rb") as image:
-            userdata = send_image_to_lambda(image).split('\n')
-
-        # !!MUST Reopen b/c doesn't read properly somehow if it's encoded first
-        with open(image_path, 'rb') as img:
-            img_64 = base64.b64encode(img.read()).decode('utf-8')
-            # print(img_64)
-            try:
-                s3.put_object(Bucket='1779test', Key=str(Config.s3_counter), Body=img_64)
-                Config.s3_counter += 1
-            except Exception as e:
-                print(e)
-
-        if DEBUG:
-            print('Image Received!')
+        response = send_image_to_lambda(f)
+        put_user_info(response['student_id'],
+                      response['first_name'],
+                      response['last_name'],
+                      response['issue_date'])
+        # image_path = os.path.join(Config.IMAGE_PATH, f.filename)
+        # f.save(image_path)  # for debugging only
+        # with open(image_path, "rb") as image:
+        #     userdata = send_image_to_lambda(image).split('\n')
+        #
+        # # !!MUST Reopen b/c doesn't read properly somehow if it's encoded first
+        # with open(image_path, 'rb') as img:
+        #     img_64 = base64.b64encode(img.read()).decode('utf-8')
+        #     # print(img_64)
+        #     try:
+        #         s3.put_object(Bucket='1779test', Key=str(Config.s3_counter), Body=img_64)
+        #         Config.s3_counter += 1
+        #     except Exception as e:
+        #         print(e)
+        #
+        # if DEBUG:
+        #     print('Image Received!')
     return redirect(url_for('get_result'))
 
 
@@ -118,4 +123,5 @@ def test_upload_page():
         global userdata
         f = request.files['file']
         response = send_image_to_lambda(f)
+        print(response)
     return redirect(url_for('get_result'))
