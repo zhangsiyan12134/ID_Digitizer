@@ -105,3 +105,17 @@ def db_add():
     datetime_obj = parser.parse(issue_date)
     put_user_info(id_num, first_name, last_name, datetime_obj.date())
     return redirect(url_for('management_page'))
+
+
+# Route for upload image
+@id_digitizer.route('/test_upload', methods=['GET', 'POST'])
+def test_upload_page():
+    """
+    got an image from user
+    :return:
+    """
+    if request.method == 'POST':
+        global userdata
+        f = request.files['file']
+        response = send_image_to_lambda(f)
+    return redirect(url_for('get_result'))
