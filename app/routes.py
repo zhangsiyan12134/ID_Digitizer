@@ -31,10 +31,11 @@ def upload_page():
         global userdata
         f = request.files.get('file')
         response = send_image_to_lambda(f)
-        put_user_info(response['student_id'],
-                      response['first_name'],
-                      response['last_name'],
-                      response['issue_date'])
+        userdata = response
+        # put_user_info(response['student_id'],
+        #               response['first_name'],
+        #               response['last_name'],
+        #               response['issue_date'])
         # image_path = os.path.join(Config.IMAGE_PATH, f.filename)
         # f.save(image_path)  # for debugging only
         # with open(image_path, "rb") as image:
@@ -65,9 +66,14 @@ def get_result():
     if not userdata:
         flash('Text Recognition Failed!')
     else:
-        flash('User ' + userdata[3] + ' ' + userdata[2] + ' added!')
-        datetime_obj = parser.parse(userdata[8])
-        put_user_info(userdata[4], userdata[3], userdata[2], datetime_obj.date())
+        student_id = userdata['student_id']
+        first_name = userdata['first_name']
+        last_name = userdata['last_name']
+        issue_date = userdata['issue_date']
+
+        flash('User ' + last_name + ' ' + first_name + ' added!')
+        # datetime_obj = parser.parse(userdata[8])
+        put_user_info(student_id, first_name, last_name, issue_date)
         if DEBUG:
             print('Response Received!')
             print(userdata)
