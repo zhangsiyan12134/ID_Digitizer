@@ -36,3 +36,4 @@ id_digitizer.config.update(
 dropzone = Dropzone(id_digitizer)
 
 from app import routes
+
