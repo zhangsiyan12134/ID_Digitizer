@@ -24,6 +24,13 @@ ec2_client = boto3.client(
         aws_secret_access_key=Config.ASW_CONFIG['SECRET_ACCESS_KEY']
     )
 
+s3_client = boto3.client(
+         's3',
+         region_name=Config.ASW_CONFIG['REGION'],
+         aws_access_key_id=Config.ASW_CONFIG['AWS_ACCESS_KEY_ID'],
+         aws_secret_access_key=Config.ASW_CONFIG['SECRET_ACCESS_KEY']
+    )
+
 id_digitizer.config.from_object(Config)
 
 id_digitizer.config.update(

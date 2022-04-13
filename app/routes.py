@@ -1,7 +1,8 @@
 from app import id_digitizer, DEBUG
-from flask import render_template, request, flash, jsonify, redirect, url_for, json
+from flask import render_template, request, flash, jsonify, redirect, url_for, json, send_file
 from app.db_access import get_user_info, put_user_info, delete_user_info
 from app.lambda_access import send_image_to_lambda
+from app.s3_access import get_user_face
 import os
 from datetime import datetime
 from dateutil import parser
@@ -11,6 +12,7 @@ from config import Config
 
 global userdata
 userdata = list()
+
 
 @id_digitizer.route('/')
 def main_page():
@@ -99,6 +101,20 @@ def db_del(id_num):
     delete_user_info(id_num)
     rows = get_user_info()
     return render_template('management.html', rows=rows)
+
+
+@id_digitizer.route('/s3_get/<id_num>', methods=['GET', 'POST'])
+def s3_get(id_num):
+    """
+    Get target user face
+    :param id_num:
+    :return:
+    """
+    response = get_user_face(id_num)
+    stream = response['Body']
+    print(stream)
+    return send_file(path_or_file=stream,
+                     download_name=str(id_num) + '.jpeg' )
 
 
 @id_digitizer.route('/db_add/', methods=['GET', 'POST'])
