@@ -68,7 +68,7 @@ def get_user_info():
             print('User found in DB! Updating the profile')'''
 
 
-def put_user_info(id_num, first_name, last_name, issue_date):
+def put_user_info(id_num, first_name, last_name):
     """
     add the new user info into DynamoDB, if ID duplicates, then update that entry
     :return:
@@ -78,7 +78,6 @@ def put_user_info(id_num, first_name, last_name, issue_date):
             'Key': str(id_num),
             'FirstName': first_name,
             'LastName': last_name,
-            'IssueDate': str(issue_date),
         }
     )
     return response

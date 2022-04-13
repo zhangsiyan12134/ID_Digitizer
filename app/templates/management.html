@@ -8,9 +8,9 @@
         <label for="last_name">&nbsp&nbsp&nbsp&nbspLast name:&nbsp</label>
         <input type="text" id="last_name" name="last_name"></br></br>
         <label for="id_num">ID#:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
-        <input type="text" id="id_num" name="id_num">
-        <label for="issue_date">&nbsp&nbsp&nbsp&nbspIssue Date:&nbsp </label>
-        <input type="text" id="issue_date" name="issue_date"></br></br>
+        <input type="text" id="id_num" name="id_num"></br></br>
+        <!--<label for="issue_date">&nbsp&nbsp&nbsp&nbspIssue Date:&nbsp </label>
+        <input type="text" id="issue_date" name="issue_date"></br></br>-->
         <button id ="button" type="submit">Submit</button></br></br>
     </form>
 </div></br>
@@ -21,7 +21,7 @@
             <th>ID Number</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Issue Date</th>
+            <!--<th>Issue Date</th>-->
             <th>Options</th>
         </tr>
         {%for row in rows:%}
@@ -29,7 +29,7 @@
             <th>{{row['Key']}}</th>
             <th>{{row['FirstName']}}</th>
             <th>{{row['LastName']}}</th>
-            <th>{{row['IssueDate']}}</th>
+            <!--<th>{{row['IssueDate']}}</th>-->
             <th>
                 <form action="{{url_for('db_del', id_num=row['Key'])}}" method="post">
                     <input type="submit" value="delete" />

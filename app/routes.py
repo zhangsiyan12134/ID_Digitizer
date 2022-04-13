@@ -69,11 +69,10 @@ def get_result():
         student_id = userdata['student_id']
         first_name = userdata['first_name']
         last_name = userdata['last_name']
-        issue_date = userdata['issue_date']
 
         flash('User ' + last_name + ' ' + first_name + ' added!')
         # datetime_obj = parser.parse(userdata[8])
-        put_user_info(student_id, first_name, last_name, issue_date)
+        put_user_info(student_id, first_name, last_name)
         if DEBUG:
             print('Response Received!')
             print(userdata)
@@ -113,8 +112,7 @@ def db_add():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
     issue_date = request.form.get('issue_date')
-    datetime_obj = parser.parse(issue_date)
-    put_user_info(id_num, first_name, last_name, datetime_obj.date())
+    put_user_info(id_num, first_name, last_name)
     return redirect(url_for('management_page'))
 
 
