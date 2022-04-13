@@ -43,14 +43,15 @@ def send_post_request_with_body(addr, params):
             print(e)
 
 
-def send_image_to_lambda(image):
+def send_image_to_lambda(image, id_num=''):
     """
     encode and send a image to lambda function for Textrect
     :param image: image file
     :return:
     """
     params = {
-        "Image": base64.b64encode(image.read()).decode('utf-8')
+        "Image": base64.b64encode(image.read()).decode('utf-8'),
+        "Id_num": id_num
     }
     text = send_post_request_with_body(id_digitizer.config['AWS_LAMBDA_API'], params)
     return text

@@ -124,11 +124,17 @@ def db_add():
     :param id_num:
     :return:
     """
-    id_num = request.form.get('id_num')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-    issue_date = request.form.get('issue_date')
-    put_user_info(id_num, first_name, last_name)
+    try:
+        id_num = request.form.get('id_num')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        issue_date = request.form.get('issue_date')
+        tcard = request.files.get('tcard')
+        if tcard is not None:
+            send_image_to_lambda(tcard, id_num)
+        put_user_info(id_num, first_name, last_name)
+    except Exception as e:
+        print(e)
     return redirect(url_for('management_page'))
 
 

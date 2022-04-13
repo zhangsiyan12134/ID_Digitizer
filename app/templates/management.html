@@ -2,15 +2,15 @@
 {% block content %}
 <div>
     <h2>Manual Entry</h2>
-    <form action="{{url_for('db_add')}}" method="post">
+    <form action="{{url_for('db_add')}}" method="post" enctype=multipart/form-data>
         <label for="first_name">First name:&nbsp</label>
         <input type="text" id="first_name" name="first_name">
         <label for="last_name">&nbsp&nbsp&nbsp&nbspLast name:&nbsp</label>
         <input type="text" id="last_name" name="last_name"></br></br>
         <label for="id_num">ID#:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <input type="text" id="id_num" name="id_num"></br></br>
-        <!--<label for="issue_date">&nbsp&nbsp&nbsp&nbspIssue Date:&nbsp </label>
-        <input type="text" id="issue_date" name="issue_date"></br></br>-->
+        <label for="tcard">Tcard:</label>
+        <input type="file" id="tcard" name="tcard"></br></br>
         <button id ="button" type="submit">Submit</button></br></br>
     </form>
 </div></br>
