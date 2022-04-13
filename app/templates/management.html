@@ -21,7 +21,7 @@
             <th>ID Number</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <!--<th>Issue Date</th>-->
+            <th>Face Image</th>
             <th>Options</th>
         </tr>
         {%for row in rows:%}
@@ -30,6 +30,11 @@
             <th>{{row['FirstName']}}</th>
             <th>{{row['LastName']}}</th>
             <!--<th>{{row['IssueDate']}}</th>-->
+            <th>
+                <form action="{{url_for('s3_get', id_num=row['Key'])}}" method="post">
+                    <input type="submit" value="Get Face" />
+                </form>
+            </th>
             <th>
                 <form action="{{url_for('db_del', id_num=row['Key'])}}" method="post">
                     <input type="submit" value="delete" />
